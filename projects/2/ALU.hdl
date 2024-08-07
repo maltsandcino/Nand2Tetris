@@ -41,5 +41,75 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+	
+	//Prep path 1:
+
+	//zx
+
+	Mux16 (a[0..15]=x[0..15], b[0..15]=false, sel=zx, out=zeroX);
+
+	//nx:
+	
+	Not16 (in=zeroX, out=zeroXnotted);
+	Mux16 (a[0..15]=zeroX, b[0..15]=zeroXnotted, sel=nx, out=functionX);
+
+	
+
+	//Prep path 2:
+
+	//zy
+
+	Mux16 (a[0..15]=y[0..15], b[0..15]=false, sel=zy, out[0..15]=zeroY);
+	
+	//ny:
+	
+	Not16 (in[0..15]=zeroY, out[0..15]=zeroYnotted);
+	Mux16 (a[0..15]=zeroY, b[0..15]=zeroYnotted, sel=ny, out[0..15]=functionY);
+
+
+	//Function Path
+
+	Add16 (a[0..15]=functionX, b[0..15]=functionY, out[0..15]=outAdd);
+	And16 (a[0..15]=functionX, b[0..15]=functionY, out[0..15]=outAnd);
+	Mux16 (a[0..15]=outAnd, b[0..15]=outAdd, sel=f, out[0..15]=outFunction);
+
+	//Output Handling
+
+	Not16 (in[0..15]=outFunction, out[0..15]=nottedOutFunction);
+
+	//Send some of the output below out in another branch for final checks, with several out statements
+	Mux16 (a[0..15]=outFunction, b[0..15]=nottedOutFunction, sel=no, out[0..15]=out[0..15], out[0..7]=or1, out[8..15]=or2, out[15]=negcheck);
+
+	
+
+	////Secondary Outputs: The first to see if the number is negative, the second to see if the number is 0
+
+	And (a=negcheck, b=true, out=ng);
+
+
+	//Is number zero?
+	
+	//Here we need to pick up where we left off with the final output
+
+	Or8Way (in=or1, out=finalcheck1);
+	Or8Way (in=or2, out=finalcheck2);
+	
+	Or (a=finalcheck1, b=finalcheck2, out=todozr);
+	Not (in=todozr, out=zr);
+	
+	
+	
+	
+
+
+	
+
+	
+
+	
+
+	
+
+	
+    
 }
