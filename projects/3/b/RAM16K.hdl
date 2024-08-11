@@ -13,5 +13,25 @@ CHIP RAM16K {
     OUT out[16];
 
     PARTS:
-    //// Replace this comment with your code.
+    	//Chip Routing
+
+	//Select Which 4k Chip
+
+	DMux4Way (in=load, sel=address[12..13], a=a, b=b, c=c, d=d);
+
+	//Select Send Data to Chips
+
+	RAM4K (in=in, load=a, address=address[0..11], out=outa);
+	RAM4K (in=in, load=b, address=address[0..11], out=outb);
+	RAM4K (in=in, load=c, address=address[0..11], out=outc);
+	RAM4K (in=in, load=d, address=address[0..11], out=outd);
+
+
+	//Routing Out
+
+	Mux4Way16 (a[0..15]=outa, b[0..15]=outb, c[0..15]=outc, d[0..15]=outd, sel=address[12..13], out[0..15]=out[0..15]);
+
+
+
 }
+
