@@ -20,3 +20,11 @@ Boolean Logic Gates, starting with simple gates based on NAND. Gates include And
 #### Week 2:
 
 Boolean Arithmetic and arithmetic gates, including half/full adders, 16 bit adders, incrementors, and a simple functioning ALU chip.
+
+#### Week 3:
+
+Dealing with Registers and Ram and Building a Counter. Here we introduce the concept of DFFs.
+
+#### Week 4:
+
+Machine language. Writing code in assembly in order to manipulate I/O (Keyboard and Screen devices)
