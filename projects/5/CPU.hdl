@@ -1,0 +1,134 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+	
+
+	////////Initial Instruction/////////
+	
+
+	Mux16(b=ALUoutput, a=instruction, sel=instruction[15], out=toAregister); // is fed through a Mux16 with Output from the ALU. The sel pin should be derived from the leftmost bit of the instruction (A or C type)
+
+	///////ARegister //////////
+
+	
+	Not(in=instruction[15], out=notin15);
+	Or(a=notin15, b=instruction[5], out=loadA); 
+	
+	ARegister(in=toAregister, out=fromAtoALUMux, load=loadA, out=toPC, out[0..14]=addressM);  // routes data to both the ALU and the PC. Control this with the appropriate instructions bit.
+
+	/////////PC////////////
+
+	//First, handle Jump logic:
+	
+	Not(in=instruction[0], out=notinstruction0);
+	Not(in=instruction[1], out=notin1);
+
+	And(a=instruction[0], b=instruction[1], out=jx11);
+	And(a=notinstruction0, b=instruction[1], out=jx10);
+	And(a=instruction[0], b=notin1, out=jx01);
+	And(a=notinstruction0, b=notin1, out=jx00);
+
+	Not(in=instruction[2], out=notin2);
+
+	And(a=instruction[2], b=jx00, out=j100);
+	And(a=instruction[2], b=jx01, out=j101);
+	And(a=instruction[2], b=jx10, out=j110);
+	And(a=instruction[2], b=jx11, out=j111);
+	And(a=notin2, b=jx00, out=j000);
+	And(a=notin2, b=jx01, out=j001);
+	And(a=notin2, b=jx10, out=j010);
+	And(a=notin2, b=jx11, out=j011);
+
+	Not(in=zr, out=notzr);
+
+	
+	Not(in=ng, out=notng);
+
+	
+	And(a=notzr, b=notng, out=zrANDngboth0);
+	And(a=notzr, b=ng, out=zr0ng1);
+	And(a=zr, b=notng, out=zr1ng0);
+	Or(a=zr, b=notng, out=zr1orng0);
+	Or(a=zr, b=ng, out=zrorng1);
+
+	And(a=j001, b=zrANDngboth0, out=jmp0);
+	And(a=j010, b=zr, out=jmp1);
+	And(a=j011, b=zr1orng0, out=jmp2);
+	And(a=j100, b=zr0ng1, out=jmp3);
+	And(a=j101, b=notzr, out=jmp4);
+	And(a=j110, b=zrorng1, out=jmp5);
+	// j111 does not need to be combined with the ng and zr pins
+	// implement last pin as false
+	
+
+
+	Or8Way(in[0]=jmp0, in[1]=jmp1, in[2]=jmp2, in[3]=jmp3, in[4]=jmp4, in[5]=jmp5, in[6]=j111, in[7]=false, out=jmp);
+
+	And(a=jmp, b=instruction[15], out=jump); //Ensure this is a c instruction
+
+	Not(in=jump, out=notjump);
+	
+
+	PC(in=toPC, load=jump, inc=notjump, reset=reset, out[0..14]=pc[0..14], out[15]=extra);
+
+	//////// A or M to ALU////////// 
+
+	
+
+	
+	Mux16(a=fromAtoALUMux, b=inM, sel=instruction[12], out=fromAMtoALU); // Memory input to the ALU via a Mux
+
+
+	//The ALU has a lot of connections. We implement them here:
+	
+	ALU(x=fromDregister, y=fromAMtoALU, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUoutput, zr=zr, ng=ng);
+
+	And(a=instruction[15], b=instruction[3], out=write);
+	Mux16(a=false, b=ALUoutput, sel=write, out=outM);
+
+	
+
+	/////// D Register /////////
+	
+
+	And(a=instruction[4], b=instruction[15], out=loadD); // controlled by destination bit, check for c instruction
+
+	DRegister(in=ALUoutput, load=loadD, out=fromDregister);
+
+	///Write to memory
+
+	And(a=instruction[15], b=instruction[3], out=writeM);
+
+	
+}
