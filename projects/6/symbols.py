@@ -42,4 +42,5 @@ def convert_symbols(instructions: list) -> list:
             instruction_number += 1
 
     instructions = [line for line in instructions if line[0] != '(']
+    
     return instructions
