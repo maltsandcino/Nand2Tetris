@@ -14,4 +14,6 @@ instructions = stripper.stripping(instructions)
 
 instructions = symbols.convert_symbols(instructions)
 
+instructions = parser.parse_instructions(instructions)
+
 pp.pp(instructions)

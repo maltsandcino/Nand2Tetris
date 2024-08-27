@@ -1,4 +1,8 @@
 import copy
+"""
+Used to remove non-instruction / label lines from program
+
+"""
 
 def stripping(instructions):
     ins = instructions.copy()
@@ -13,14 +17,18 @@ def stripping(instructions):
         '\r',
         'D',
         'M',
-        'A'
+        'A',
+        '0',
+        '-',
+        '1',
+        '!'
     ]
 
     for line in instructions:
         
         if len(line) > 0 and line[0] not in starting_symbols:
             print(line)
-            return ValueError("Line begins with non-comment or instruction")
+            return ValueError("Line beginning with non-comment or instruction")
 
     for i, line in enumerate(instructions):
         if "//" in line:
