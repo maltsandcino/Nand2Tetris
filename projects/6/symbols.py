@@ -1,6 +1,6 @@
 symbol_table = {
-    "R0": 0, "R0": 1,"R0": 2, "R0": 3, "R0": 4, "R0": 5, "R0": 6, "R0": 7,
-    "R0": 8, "R0": 9, "R0": 10, "R0": 11, "R0": 12, "R0": 13, "R0": 14, "R15": 15,
+    "R0": 0, "R1": 1,"R2": 2, "R3": 3, "R4": 4, "R5": 5, "R6": 6, "R7": 7,
+    "R8": 8, "R9": 9, "R10": 10, "R11": 11, "R12": 12, "R13": 13, "R14": 14, "R15": 15,
     "SCREEN": 16384, "KBD": 24576, "SP": 0, "LCL": 1, "ARG": 2, "THIS": 3, "THAT": 4,
 }
 
@@ -42,5 +42,5 @@ def convert_symbols(instructions: list) -> list:
             instruction_number += 1
 
     instructions = [line for line in instructions if line[0] != '(']
-    
+
     return instructions
