@@ -1,19 +1,34 @@
-import parser
-import coder
+from parser import Parser
+from coder import Coder
 import stripper
 import symbols
 from sys import argv
 import pprint as pp
 
-file_path = argv[1]
+def main():
+    parser = Parser()
+    coder = Coder()
 
-with open(file_path) as f:
-    instructions = [line.rstrip() for line in f]
+    file_path = argv[1]
 
-instructions = stripper.stripping(instructions)
+    with open(file_path) as f:
+        instructions = [line.rstrip() for line in f]
 
-instructions = symbols.convert_symbols(instructions)
+    instructions = stripper.stripping(instructions)
 
-instructions = parser.parse_instructions(instructions)
+    instructions = symbols.convert_symbols(instructions)
 
-pp.pp(instructions)
+    instructions = parser.parse_instructions(instructions)
+
+    instructions = coder.convert(instructions)
+
+    file_path = file_path[:-4] + ".hack"
+
+    with open(file_path, 'w') as f:
+        for command in instructions:
+            f.write(command + '\n')
+    print("Your file has been successfully assembled into machine language")
+
+if __name__ == "__main__":
+    main()
+
