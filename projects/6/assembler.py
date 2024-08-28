@@ -11,6 +11,10 @@ def main():
 
     file_path = argv[1]
 
+    if len(argv) != 2 or not argv[1].endswith(".asm"):
+        print("Usage: python assembler.py path_to_file.asm")
+        return 1
+
     with open(file_path) as f:
         instructions = [line.rstrip() for line in f]
 
