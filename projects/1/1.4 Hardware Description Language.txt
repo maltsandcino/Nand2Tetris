@@ -1,0 +1,59 @@
+Hardware Description Language:
+
+First steps:
+
+Create a diagram of the chip and a truth table (the interface)
+
+0	0	0
+0	1	1
+1	0	1
+0	0	0
+
+Signal can be fanned out to many different destinations in HDL diagrams.
+Each output (and therefore new input) has to be named
+
+
+
+Start The file:
+
+1. Comment describing what the gate does
+
+/** Xor gate: out = (a And Not(b)) Or (Not(a) And b)) */
+
+2. Give the name of the chip and the inputs
+
+CHIP Xor {
+	IN a, b;
+	OUT out;
+
+	PARTS:
+	//Implementation missing
+}
+
+3. We need to add the parts (For this example, assume we have and not and or gates)
+
+CHIP Xor {
+	IN a, b;
+	OUT out;
+
+	PARTS:
+	Not (in=a, out=nota);
+	Not (in=b, out=notb);
+	And (a=a, b=notb, out=aAndNotb);
+	And (a=nota, b=b, out=notaAndb;
+	Or  (a=aAndNotb, b=notaAndb, out=out);
+	
+}
+
+
+NOTES:
+
+HDL is functional / declarative
+Naming and indentation are important for readability
+Documentation is also important
+Better to describe the chip from left to right (though order is not necessarily important)
+You must know the interface for each chip part you want to use
+
+
+
+

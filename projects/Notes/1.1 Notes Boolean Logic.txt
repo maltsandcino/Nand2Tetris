@@ -1,0 +1,65 @@
+
+
+Boolean Expressions:
+
+NOT(0 OR (1 AND 1))
+
+= NOT (0 OR 1) // Simplify
+
+= NOT (1) // Simplify
+
+= 0
+
+----
+
+f(x, y, z) = (x AND y) OR (NOT(x) AND z)
+
+Construct a truth table with all possible values of x, y, z
+
+x, y, z, | f
+============
+0  0  0  | 0
+0  0  1  | 1
+0  1  0  | 0
+0  1  1  | 1
+1  0  0  | 0
+1  0  1  | 0
+1  1  0  | 1
+1  1  1  | 1
+
+Commutative Law:
+(x AND y) == (y AND x)
+(x OR y)  == (y OR x)
+
+
+Associative Laws:
+
+(x AND (y AND z)) == ((x AND y) AND z)
+(x OR (y OR z)) == ((x OR y) OR z)
+
+Distributive Law:
+
+It's like basically expanding the equation by multiplying the inner bracket
+elements by the outer element.
+  ____________
+ /      |     |
+(x AND (y OR z)) == (x AND y) OR (x AND z) 
+(x OR (y AND z)) == (x OR y) AND (x OR z) 
+
+De Morgan laws:
+
+NOT(x AND y) = NOT(x) OR NOT(y)
+NOT(x OR y) = NOT(x) AND NOT(y)
+
+Example:
+
+Not(Not(x) and Not(x OR y))= 		De Morgan --
+Not(Not(x) and (Not(x) and Not(y)))	Associative --
+Not((Not(x) and (Not(x)) and Not(y))=	Idempotence (same thing in an AND)
+Not(Not(x) and Not(y)) = 		De Morgan Law again
+Not(Not(x)) OR Not(Not(y)) =		Double Negation
+X or Y
+
+
+
+  

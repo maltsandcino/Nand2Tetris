@@ -1,0 +1,67 @@
+Machine Language Elements
+
+Specification:
+
+Operations:
+	Arithmetic:
+		ADD
+		SUBTRACT
+		ETC..
+	Logical:
+		And
+		Or
+	Flow:
+		GOTO...
+		IF
+
+
+Operands:
+	Datatypes
+	Size
+
+Data registers (Hold data)
+
+Address Registers (Store address as a variable)
+
+Addressing Modes:
+
+	Register:
+	Add R1, R2 (Put the sum of r1 and r2 into r2)
+
+	Direct:
+	Add R1, M[200] (Same idea
+	
+	Indirect:
+	Add R1, @A (Same idea, add to the address stored in A)
+
+	Immediate:
+	Add 73, R1 (Add 73 to whatever is in R1)
+
+
+Flow Control:
+
+	Usually Sequential
+	
+	Jump to another instruction
+
+	101 LoadR1, 0
+	102 Add 1, R1
+	103 ...
+	156 Jump 102
+	
+	Simple loop
+
+	We can name the address with a variable to make it easier
+
+	Conditional Jumps:
+	
+	Only jump if some condition is met.
+
+	Example: We want to perform some calculation on the absolute value of a register. We want to absolute the number in order to continue:
+
+		JGT R1, 0, cont // Jump if R1 is greater than 0
+		Subtract R1, 0, R1 // R1 <- (0 - R1)
+
+		cont:
+		//Some other code
+	
