@@ -28,3 +28,11 @@ Dealing with Registers and Ram and Building a Counter. Here we introduce the con
 #### Week 4:
 
 Machine language. Writing code in assembly in order to manipulate I/O (Keyboard and Screen devices)
+
+#### Week 5:
+
+Computer implementation. CPU, and RAM chips implemented, and functioning Computer with ROM chip built.
+
+#### Week 6:
+
+Assembler. A python driven assembler was built from scratch in order to conver hack assembly files (.asm) into usable machine code in .hack files. It was a good chance for me to practise some new things like using type hinting and implementing a few new algorithms. I tried to use some objects to drive some code as well.
